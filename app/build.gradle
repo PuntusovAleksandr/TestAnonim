@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+    defaultConfig {
+        applicationId "com.android.anonim_"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+//            shrinkResources true
+//            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig, 'R')
+            }
+        }
+
+        debug {
+            testCoverageEnabled false
+            minifyEnabled false
+            shrinkResources false
+            debuggable true
+            versionNameSuffix '-dev'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig, 'D')
+            }
+        }
+    }
+}
+
+
+def renameAPK(variant, defaultConfig, buildType) {
+    variant.outputs.each { output ->
+        def formattedDate = new Date().format('dd-MM')
+
+        def file = output.packageApplication.outputFile
+        def fileName = "Free2be_" + formattedDate + "_v" + defaultConfig.versionCode + "_" + buildType + ".apk"
+        output.packageApplication.outputFile = new File(file.parent, fileName)
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+}
