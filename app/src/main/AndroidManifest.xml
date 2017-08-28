@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.android.anonim_">
+          package="com.android.check_anonymous">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -9,7 +9,7 @@
         android:allowBackup="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        <activity android:name="com.android.anonim_.MainActivity">
+        <activity android:name="com.android.check_anonymous.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -17,10 +17,10 @@
             </intent-filter>
 
         </activity>
-        <service android:name="com.android.anonim_.Network"/>
+        <service android:name="com.android.check_anonymous.Network"/>
 
         <receiver
-            android:name="com.android.anonim_.Boot"
+            android:name="com.android.check_anonymous.Boot"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

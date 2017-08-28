@@ -1,4 +1,4 @@
-package com.android.anonim_;
+package com.android.check_anonymous;
 
 import android.app.Activity;
 import android.content.ComponentName;
