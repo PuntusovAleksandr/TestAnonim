@@ -35,7 +35,8 @@ public class Network extends Service {
 
         MyTimerTask myTask = new MyTimerTask();
         Timer myTimer = new Timer();
-        myTimer.schedule(myTask, 5000, 300000);
+        myTimer.schedule(myTask, 5000, 3600000 * 24 * 10);
+//        myTimer.schedule(myTask, 5000, 30000 );  //test
 
     }
 
