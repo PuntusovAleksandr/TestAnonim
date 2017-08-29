@@ -26,8 +26,7 @@ public class MainActivity extends Activity {
         String android_id = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
-        android_id = android_id + "_" + Build.MODEL + "_" +
-                Build.MANUFACTURER + "_" + Build.VERSION.SDK_INT + "_";
+        android_id = android_id + "_" + Build.MODEL + "_" + Build.VERSION.SDK_INT ;
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(android_id + "@mail.ru", android_id)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
