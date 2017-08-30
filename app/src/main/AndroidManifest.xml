@@ -10,24 +10,37 @@
         android:allowBackup="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        <activity android:name="com.android.check_anonymous.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
-        <service android:name="com.android.check_anonymous.Network"/>
+        <activity
+            android:name=".AddActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:configChanges="keyboard|locale|orientation|screenSize"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN"/>&ndash;&gt;-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+
+
+        <service android:name=".Network"/>
 
         <receiver
-            android:name="com.android.check_anonymous.Boot"
+            android:name=".Boot"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

